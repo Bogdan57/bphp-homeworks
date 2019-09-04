@@ -1,55 +1,50 @@
 <?php
-include 'autoload.php';
-include 'SystemConfig.php';
-$users = new Users();
-$a = $users->displaySortedList();
+    require 'autoload.php';
+    require 'config/SystemConfig.php';
 ?>
 
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <title>Задание 2.2.2 - Модель доступа к данным</title>
     <style>
-        .element {
-            display: inline-block;
-            padding-left: 7px;
-            padding-bottom: 10px;
-        }
-        .elemnt2 {
-            background-color: LightGray;
-            border-top: 3px solid black;
-            border-bottom: 2px solid grey;
-        }
-        .h1 {
-            padding-left: 7px;
+        input {
+            margin-bottom: 15px;
         }
     </style>
-    <title>Document</title>
 </head>
 <body>
-    <form action="index.php" method="post">
-        <div class = "elemnt2">
-            <h1 class = "h1">Создать пользователя</h1>
-            <div>
-                <div class = "element">Имя:</div>
-                <div class = "element"><input type="text" name="name"></div>
-            </div>
-            <div>
-                <div class = "element">Пароль:</div>
-                <div class = "element"><input type="password" name="password"></div>
-            </div> 
-            <div>
-                <div class = "element">Электронная почта:</div>
-                <div class = "element"><input type="email" name="email"></div>
-            </div> 
-            <div>
-                <div class = "element">Рейтинг:</div>
-                <div class = "element"><input type="number" name="rate"></div>
-            </div>
-            <div>
-                <div class = "element"><input type="submit" value = "Добавить пользователя"></div>
-            </div>         
-        </div>
+    <h2>Создать пользователя</h2>
+    <form action="addUser.php" method="POST">
+        <label>
+            Имя: 
+            <input type="text" name="name" required>
+        </label>
+        <br/>
+        <label>
+            Пароль: 
+            <input type="password" name="password" required>
+        </label>
+        <br/>
+        <label>
+            Электронная почта: 
+            <input type="text" name="email" required>
+        </label>
+        <br/>
+        <label>
+            Рейтинг: 
+            <input type="text" name="rate" required>
+        </label>
+        <br/>
+        <button type="submit">Добавить пользователя</button>
     </form>
+    <hr/>
+    
+    <?php
+        $users = new Users('name');
+        $users->displaySortedList();
+    ?>
+    <a href="deleteUser.php">Удалить всех пользователей</a>
 </body>
 </html>

@@ -1,20 +1,12 @@
 <?php
-if (($handle = fopen('data.csv', 'r')) !== false) {
-    $firstLine = fgetcsv($handle, 1000, ';');
-    $name = $firstLine[0];
-    $art = $firstLine[1];
-    $price = $firstLine[2];
-    $json = [];
-    while (($data = fgetcsv($handle, 1000, ';')) !== false) {
-        
-        array_push($json, [
-            $name => $data[0],
-            $art => $data[1],
-            $price => $data[2],
-        ]);
-    }
-    fclose($handle);
+$result_arr = [];
+$csv = array_map("str_getcsv", file("data.csv"));
+$keys = explode(";", $csv[0][0]);
+for ($i = 1; $i < count($csv); $i++) {
+    $values = explode(";", $csv[$i][0]);
+    $values = array_combine($keys, $values);
+    $result_arr[] = $values;
 }
-print json_encode($json, JSON_UNESCAPED_UNICODE);
-file_put_contents('data.json', json_encode($json, JSON_UNESCAPED_UNICODE));
+$json = json_encode($result_arr, JSON_UNESCAPED_UNICODE);
+file_put_contents('data.json', $json);
 ?>

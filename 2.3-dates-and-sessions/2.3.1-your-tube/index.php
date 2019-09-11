@@ -1,4 +1,5 @@
 <?php
+    session_start();
     /**
      * Функция получает текущее количество просмотров на видео
      *
@@ -9,7 +10,6 @@
         $views = include 'views.php';
         return (int) $views;
     }
-
     /**
      * Функция увеличивает количество просмотров на 1
      *
@@ -21,7 +21,16 @@
         $data = "<?php \r\nreturn {$views};";
         file_put_contents('views.php', $data);
     }
-
+    /**
+     * Функция меняет время, в которое пользователь посмотрел видео
+     *
+     * @param int $time
+     */
+    function changeTime($time)
+    {
+        $_SESSION['time'] = $time;
+        setcookie('time', $time, time() + 300);
+    }
     /**
      * Функция проверяет, нужно ли увеличивать число просмотров
      *
@@ -29,10 +38,23 @@
      */
     function shouldBeIncremented(): bool
     {
-        //write your code here
+        if (isset($_SESSION['time'])) {
+            if (time() - $_SESSION['time'] >= 300 && isset($_COOKIE['time']) === false) {
+                changeTime(time());
+                return true;
+            }
+            return false;
+        } elseif (isset($_COOKIE['time'])) {
+            return false;
+        } else {
+            changeTime(time());
+            return true;
+        }
     }
-
-    //
+    if (shouldBeIncremented()) {
+        $views = getViews();
+        incrementViews($views);
+    }
 ?>
 
 <!DOCTYPE html>
